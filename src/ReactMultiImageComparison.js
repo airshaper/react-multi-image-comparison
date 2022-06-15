@@ -1,6 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
-import { Image } from "./Image";
 import { Handles } from "./Handles";
 
 export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
@@ -68,7 +67,7 @@ export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
               width: `${(totalWidth / imagePaths.length) * (i + 1)}px`,
             }}
           >
-            <Image src={image} alt="Alt" style={{ width: totalWidth }}></Image>
+            <img src={image} alt="Alt" style={{ width: totalWidth }} />
             {imageDescs.length > 0 && (
               <span style={{ left: `${descLeft[i]}px` }}>{imageDescs[i]}</span>
             )}
