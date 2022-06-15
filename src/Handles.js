@@ -104,7 +104,7 @@ export function Handles({
   );
 }
 
-Image.propTypes = {
+Handles.propTypes = {
   totalWidth: PropTypes.number.isRequired,
   totalHeight: PropTypes.number.isRequired,
   totalImages: PropTypes.number.isRequired,
