@@ -1,5 +1,5 @@
 {
-  "name": "react-multi-image-comparison",
+  "name": "@airshaper/react-multi-image-comparison",
   "version": "0.0.1",
   "source": "src/ReactMultiImageComparison.js",
   "main": "dist/main.js",
