@@ -1,6 +1,6 @@
 {
   "name": "@airshaper/react-multi-image-comparison",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "source": "src/ReactMultiImageComparison.js",
   "main": "dist/main.js",
   "license": "MIT",
