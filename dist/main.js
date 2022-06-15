@@ -15,18 +15,6 @@ $parcel$export(module.exports, "ReactMultiImageComparison", () => $1866e25f18db3
 
 
 
-function $fffd771b354e8c28$export$3e431a229df88919({ ...props }) {
-    return /*#__PURE__*/ (0, $6JvG5$reactjsxruntime.jsx)("img", {
-        ...props
-    });
-}
-$fffd771b354e8c28$export$3e431a229df88919.propTypes = {
-    src: (0, ($parcel$interopDefault($6JvG5$proptypes))).object.isRequired
-};
-
-
-
-
 
 function $b5ba15e76edec701$export$e687473b8d6c8292({ totalWidth: totalWidth , totalHeight: totalHeight , totalImages: totalImages , zIndex: zIndex , listRefs: listRefs , updateDesc: updateDesc ,  }) {
     const [currentHandle, setCurrentHandle] = (0, $6JvG5$react.useState)(null);
@@ -100,7 +88,7 @@ function $b5ba15e76edec701$export$e687473b8d6c8292({ totalWidth: totalWidth , to
             }, i))
     });
 }
-Image.propTypes = {
+$b5ba15e76edec701$export$e687473b8d6c8292.propTypes = {
     totalWidth: (0, ($parcel$interopDefault($6JvG5$proptypes))).number.isRequired,
     totalHeight: (0, ($parcel$interopDefault($6JvG5$proptypes))).number.isRequired,
     totalImages: (0, ($parcel$interopDefault($6JvG5$proptypes))).number.isRequired,
@@ -154,7 +142,7 @@ function $1866e25f18db3eb9$export$b4fd821e44278c80({ imagePaths: imagePaths , im
                             width: `${totalWidth / imagePaths.length * (i + 1)}px`
                         },
                         children: [
-                            /*#__PURE__*/ (0, $6JvG5$reactjsxruntime.jsx)((0, $fffd771b354e8c28$export$3e431a229df88919), {
+                            /*#__PURE__*/ (0, $6JvG5$reactjsxruntime.jsx)("img", {
                                 src: image,
                                 alt: "Alt",
                                 style: {
