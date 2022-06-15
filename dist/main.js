@@ -111,7 +111,6 @@ Image.propTypes = {
 
 function $1866e25f18db3eb9$export$b4fd821e44278c80({ imagePaths: imagePaths , imageDescs: imageDescs , zIndex: zIndex  }) {
     const listRefs = (0, $6JvG5$react.useRef)([]);
-    // const listRef = useRef();
     const [descLeft, setDescLeft] = (0, $6JvG5$react.useState)(Array(imagePaths.length).fill(0));
     const [totalWidth, setTotalWidth] = (0, $6JvG5$react.useState)(0);
     const [totalHeight, setTotalHeight] = (0, $6JvG5$react.useState)(0);
