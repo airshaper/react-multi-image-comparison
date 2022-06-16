@@ -4,16 +4,10 @@ import { Handles } from "./Handles";
 
 export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
   const listRefs = useRef([]);
+  const listRef = useRef(null);
   const [descLeft, setDescLeft] = useState(Array(imagePaths.length).fill(0));
   const [totalWidth, setTotalWidth] = useState(0);
   const [totalHeight, setTotalHeight] = useState(0);
-
-  const listRef = useCallback((node) => {
-    if (node !== null) {
-      setTotalWidth(node.clientWidth);
-      setTotalHeight(node.clientHeight);
-    }
-  }, []);
 
   const updateDesc = (handleRefs) => {
     let updated = descLeft.map((_item, idx) => textPosition(idx, handleRefs));
@@ -45,6 +39,17 @@ export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
       textWidth / 4
     );
   };
+
+  useEffect(() => {
+    const listElement = listRef.current;
+    const resizeObserver = new ResizeObserver(([entry, ..._]) => {
+      setTotalWidth(entry.target.getBoundingClientRect().width);
+      setTotalHeight(entry.target.getBoundingClientRect().height);
+    });
+    resizeObserver.observe(listElement);
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     let initialDescPositions = descLeft.map(

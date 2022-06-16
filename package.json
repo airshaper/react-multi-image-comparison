@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel serve src/index.html",
+    "dev": "parcel serve src/app.html",
     "watch": "parcel watch",
     "build": "parcel build && cp src/style.scss dist"
   },
@@ -16,8 +16,8 @@
   },
   "peerDependencies": {
     "prop-types": "^15.8.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "description": "Multi Image Comparison Tool",
   "repository": {
@@ -31,9 +31,13 @@
     "images",
     "multiple"
   ],
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "author": "Nikola Majksner (AirShaper)",
   "bugs": {
     "url": "https://github.com/airshaper/react-multi-image-comparison/issues"
   },
-  "homepage": "https://github.com/airshaper/react-multi-image-comparison#readme"
+  "homepage": "https://github.com/airshaper/react-multi-image-comparison#readme",
+  "dependencies": {
+    "@swc/helpers": "^0.4.2"
+  }
 }

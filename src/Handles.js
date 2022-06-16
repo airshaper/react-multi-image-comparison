@@ -70,7 +70,7 @@ export function Handles({
     }
   };
 
-  const topPosition = (i) => {
+  const handlePosition = (i) => {
     handleHeight = (30 / totalHeight) * 100;
 
     handleClearanceFactor = 0.5;
@@ -96,7 +96,7 @@ export function Handles({
             style={{
               zIndex: totalImages - 2 * i + zIndex,
               left: `${(totalWidth / totalImages) * (i + 1) - 30 / 2}px`,
-              top: `${topPosition(i)}%`,
+              top: `${handlePosition(i)}%`,
             }}
           ></div>
         ))}
