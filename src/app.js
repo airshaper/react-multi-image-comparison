@@ -15,7 +15,7 @@ root.render(
   <div style={{ width: "1000px" }}>
     <StrictMode>
       <ReactMultiImageComparison
-        imagePaths={[image1, image2, image3, image4]}
+        imagePaths={[image1, image2, image3]}
         imageDescs={["Basic", "Regular", "Advanced", "Optimized"]}
       />
     </StrictMode>

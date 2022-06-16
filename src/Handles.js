@@ -6,12 +6,21 @@ export function Handles({
   totalHeight,
   totalImages,
   zIndex,
-  listRefs,
+  listWidths,
+  setListWidths,
   updateDesc,
 }) {
-  const [currentHandle, setCurrentHandle] = useState(null);
+  const initialDimensions = Array.from(
+    { length: totalImages - 1 },
+    (_, i) => (totalWidth / totalImages) * (i + 1) - 30 / 2
+  );
+
   const handleRefs = useRef([]);
-  const handleRef = useRef([]);
+  const [activeHandle, setActiveHandle] = useState(null);
+  const [handlePositions, setHandlePositions] = useState(initialDimensions);
+  const [handleOffsets, setHandleOffsets] = useState(
+    Array(totalImages - 1).fill(0)
+  );
 
   useEffect(() => {
     document.addEventListener("mousemove", moveEvent);
@@ -28,45 +37,81 @@ export function Handles({
   });
 
   const onMouseDown = (e, i) => {
-    setCurrentHandle(i);
-    handleRefs.current[i].offset = e.pageX - handleRefs.current[i].offsetLeft;
+    setActiveHandle(i);
+    setHandleOffsets(
+      Object.assign([], handleOffsets, {
+        [i]: e.pageX - handleRefs.current[i].offsetLeft,
+      })
+    );
   };
   const onEnd = (e) => {
-    setCurrentHandle(null);
+    setActiveHandle(null);
   };
   const touchStart = (e, i) => {
-    setCurrentHandle(i);
-    handleRefs.current[i].offset = e.pageX - handleRefs.current[i].offsetLeft;
+    setActiveHandle(i);
+    setHandleOffsets(
+      Object.assign([], handleOffsets, {
+        [i]: e.pageX - handleRefs.current[i].offsetLeft,
+      })
+    );
   };
 
   const moveEvent = (e) => {
-    if (currentHandle !== null) {
-      if (e.changedTouches) {
-        e = e.changedTouches[0];
-      }
-      let handle = handleRefs.current[currentHandle];
+    if (activeHandle !== null) {
+      let handle = handleRefs.current[activeHandle];
       const handlePosition = Math.min(
-        Math.max(e.clientX - handle.offset, 0 - handle.clientWidth / 2),
+        Math.max(
+          e.touches
+            ? e.touches[0].clientX
+            : e.clientX - handleOffsets[activeHandle],
+          0 - handle.clientWidth / 2
+        ),
         totalWidth - handle.clientWidth / 2
       );
       const elementPosition = handlePosition + handle.clientWidth / 2;
 
-      handle.style.left = `${handlePosition}px`;
-      listRefs.current[currentHandle].style.width = `${elementPosition}px`;
+      setListWidths(
+        Object.assign([], listWidths, {
+          [activeHandle]: elementPosition,
+        })
+      );
 
-      handleRefs.current.forEach((h, index) => {
-        if (currentHandle > index && handle.offsetLeft <= h.offsetLeft) {
-          h.style.left = `${handlePosition}px`;
-          listRefs.current[index].style.width = `${handlePosition + 15}px`;
+      setHandlePositions(
+        Object.assign([], handlePositions, {
+          [activeHandle]: handlePosition,
+        })
+      );
+
+      handlePositions.forEach((h, index) => {
+        if (activeHandle > index && handle.offsetLeft <= h) {
+          setHandlePositions(
+            Object.assign([], handlePositions, {
+              [index]: handlePosition + 2,
+            })
+          );
+
+          setListWidths(
+            Object.assign([], listWidths, {
+              [index]: handlePosition + 15,
+            })
+          );
         }
 
-        if (currentHandle < index && handle.offsetLeft >= h.offsetLeft) {
-          h.style.left = `${handlePosition}px`;
-          listRefs.current[index].style.width = `${handlePosition + 15}px`;
+        if (activeHandle < index && handle.offsetLeft >= h) {
+          setHandlePositions(
+            Object.assign([], handlePositions, {
+              [index]: handlePosition + 2,
+            })
+          );
+          setListWidths(
+            Object.assign([], listWidths, {
+              [index]: handlePosition + 15,
+            })
+          );
         }
       });
 
-      updateDesc(handleRefs);
+      updateDesc(handlePositions);
     }
   };
 
@@ -82,8 +127,12 @@ export function Handles({
     return 50 + handleHeightFirstToLast / 2 - i * handleDistance;
   };
 
+  useEffect(() => {
+    setHandlePositions(initialDimensions);
+  }, [totalWidth, totalHeight]);
+
   return (
-    <div className="handles" ref={handleRef}>
+    <div className="handles">
       {Array(totalImages - 1)
         .fill(0)
         .map((_, i) => (
@@ -95,7 +144,7 @@ export function Handles({
             className="handle"
             style={{
               zIndex: totalImages - 2 * i + zIndex,
-              left: `${(totalWidth / totalImages) * (i + 1) - 30 / 2}px`,
+              left: `${handlePositions[i]}px`,
               top: `${handlePosition(i)}%`,
             }}
           ></div>
@@ -109,5 +158,7 @@ Handles.propTypes = {
   totalHeight: PropTypes.number.isRequired,
   totalImages: PropTypes.number.isRequired,
   zIndex: PropTypes.number.isRequired,
+  listWidths: PropTypes.array.isRequired,
+  setListWidths: PropTypes.func.isRequired,
   updateDesc: PropTypes.func,
 };
