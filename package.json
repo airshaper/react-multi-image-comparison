@@ -1,6 +1,6 @@
 {
   "name": "@airshaper/react-multi-image-comparison",
-  "version": "0.0.7",
+  "version": "0.0.6",
   "source": "src/ReactMultiImageComparison.js",
   "main": "dist/main.js",
   "license": "MIT",
@@ -36,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/airshaper/react-multi-image-comparison/issues"
   },
-  "homepage": "https://github.com/airshaper/react-multi-image-comparison#readme"
+  "homepage": "https://github.com/airshaper/react-multi-image-comparison#readme",
+  "dependencies": {
+    "@swc/helpers": "^0.4.2"
+  }
 }
