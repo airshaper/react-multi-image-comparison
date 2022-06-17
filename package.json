@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "license": "MIT",
   "scripts": {
-    "dev": "parcel serve src/app.html",
+    "dev": "parcel src/app.html --dist-dir dev",
     "watch": "parcel watch",
     "build": "parcel build && cp src/style.scss dist"
   },
