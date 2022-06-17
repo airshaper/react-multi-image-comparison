@@ -23,20 +23,20 @@ export function Handles({
   );
 
   useEffect(() => {
-    document.addEventListener("mousemove", moveEvent);
-    document.addEventListener("mouseup", onEnd);
+    document.addEventListener("pointermove", moveEvent);
+    document.addEventListener("pointerup", onEnd);
     document.addEventListener("touchend", onEnd);
     document.addEventListener("touchmove", moveEvent);
 
     return () => {
-      document.removeEventListener("mousemove", moveEvent);
-      document.removeEventListener("mouseup", onEnd);
+      document.removeEventListener("pointermove", moveEvent);
+      document.removeEventListener("pointerup", onEnd);
       document.removeEventListener("touchend", onEnd);
       document.removeEventListener("touchmove", moveEvent);
     };
   });
 
-  const onMouseDown = (e, i) => {
+  const onPointerDown = (e, i) => {
     setActiveHandle(i);
     setHandleOffsets(
       Object.assign([], handleOffsets, {
@@ -139,7 +139,7 @@ export function Handles({
           <div
             key={i}
             ref={(ref) => (handleRefs.current[i] = ref)}
-            onMouseDown={(e) => onMouseDown(e, i)}
+            onPointerDown={(e) => onPointerDown(e, i)}
             onTouchStart={(e) => touchStart(e, i)}
             className="handle"
             style={{
