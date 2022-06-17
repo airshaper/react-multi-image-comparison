@@ -1,40 +1,43 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import PropTypes from "prop-types";
 import { Handles } from "./Handles";
 
 export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
-  const textRefs = useRef([]);
+  const listRefs = useRef([]);
   const listRef = useRef(null);
   const [descLeft, setDescLeft] = useState(Array(imagePaths.length).fill(0));
-  const [listWidths, setListWidths] = useState([]);
   const [totalWidth, setTotalWidth] = useState(0);
   const [totalHeight, setTotalHeight] = useState(0);
 
-  const initialListWidths = Array.from(
-    { length: imagePaths.length },
-    (_, i) => (totalWidth / imagePaths.length) * (i + 1)
-  );
-
-  const updateDesc = (handlePositions) => {
-    setDescLeft(
-      descLeft.map((_item, idx) => textPosition(idx, handlePositions))
-    );
+  const updateDesc = (handleRefs) => {
+    let updated = descLeft.map((_item, idx) => textPosition(idx, handleRefs));
+    setDescLeft(updated);
   };
 
-  const textPosition = (i, handlePositions) => {
-    const textWidth = textRefs.current[i].clientWidth;
+  const textPosition = (i, handleRefs) => {
+    const textWidth = listRefs.current[i].lastChild.clientWidth;
     // first
     if (i === 0) {
-      return listWidths[i] / 2 - textWidth / 2;
+      return listRefs.current[0].clientWidth / 2 - textWidth / 2;
     }
 
     //last
     if (imagePaths.length - 1 === i) {
-      return (listWidths[i] + handlePositions[i - 1]) / 2 - textWidth / 2;
+      return (
+        (listRefs.current[i].clientWidth +
+          handleRefs.current[i - 1].offsetLeft) /
+          2 -
+        textWidth / 2
+      );
     }
 
     // all others except first and last
-    return (handlePositions[i - 1] + handlePositions[i]) / 2 - textWidth / 4;
+    return (
+      (handleRefs.current[i - 1].offsetLeft +
+        handleRefs.current[i].offsetLeft) /
+        2 -
+      textWidth / 4
+    );
   };
 
   useEffect(() => {
@@ -52,13 +55,9 @@ export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
     let initialDescPositions = descLeft.map(
       (_item, i) =>
         (totalWidth / imagePaths.length) * (2 * i + 1) * 0.5 -
-        textRefs.current[i].clientWidth / 2
+        listRefs.current[i].lastChild.clientWidth / 2
     );
     setDescLeft(initialDescPositions);
-  }, [totalWidth]);
-
-  useEffect(() => {
-    setListWidths(initialListWidths);
   }, [totalWidth]);
 
   return (
@@ -67,19 +66,15 @@ export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
         {imagePaths.map((image, i) => (
           <li
             key={i}
+            ref={(ref) => (listRefs.current[i] = ref)}
             style={{
               zIndex: imagePaths.length - (2 * i + 1) + zIndex,
-              width: `${listWidths[i]}px`,
+              width: `${(totalWidth / imagePaths.length) * (i + 1)}px`,
             }}
           >
             <img src={image} alt="Alt" style={{ width: totalWidth }} />
             {imageDescs.length > 0 && (
-              <span
-                ref={(ref) => (textRefs.current[i] = ref)}
-                style={{ left: `${descLeft[i]}px` }}
-              >
-                {imageDescs[i]}
-              </span>
+              <span style={{ left: `${descLeft[i]}px` }}>{imageDescs[i]}</span>
             )}
           </li>
         ))}
@@ -87,8 +82,7 @@ export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
       <Handles
         totalWidth={totalWidth}
         totalHeight={totalHeight}
-        listWidths={listWidths}
-        setListWidths={setListWidths}
+        listRefs={listRefs}
         updateDesc={updateDesc}
         totalImages={imagePaths.length}
         zIndex={zIndex}

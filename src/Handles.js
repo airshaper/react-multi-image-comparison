@@ -6,112 +6,67 @@ export function Handles({
   totalHeight,
   totalImages,
   zIndex,
-  listWidths,
-  setListWidths,
+  listRefs,
   updateDesc,
 }) {
-  const initialDimensions = Array.from(
-    { length: totalImages - 1 },
-    (_, i) => (totalWidth / totalImages) * (i + 1) - 30 / 2
-  );
-
+  const [currentHandle, setCurrentHandle] = useState(null);
   const handleRefs = useRef([]);
-  const [activeHandle, setActiveHandle] = useState(null);
-  const [handlePositions, setHandlePositions] = useState(initialDimensions);
-  const [handleOffsets, setHandleOffsets] = useState(
-    Array(totalImages - 1).fill(0)
-  );
+  const handleRef = useRef([]);
 
   useEffect(() => {
-    document.addEventListener("pointermove", moveEvent);
-    document.addEventListener("pointerup", onEnd);
+    document.addEventListener("mousemove", moveEvent);
+    document.addEventListener("mouseup", onEnd);
     document.addEventListener("touchend", onEnd);
     document.addEventListener("touchmove", moveEvent);
 
     return () => {
-      document.removeEventListener("pointermove", moveEvent);
-      document.removeEventListener("pointerup", onEnd);
+      document.removeEventListener("mousemove", moveEvent);
+      document.removeEventListener("mouseup", onEnd);
       document.removeEventListener("touchend", onEnd);
       document.removeEventListener("touchmove", moveEvent);
     };
   });
 
-  const onPointerDown = (e, i) => {
-    setActiveHandle(i);
-    setHandleOffsets(
-      Object.assign([], handleOffsets, {
-        [i]: e.pageX - handleRefs.current[i].offsetLeft,
-      })
-    );
+  const onMouseDown = (e, i) => {
+    setCurrentHandle(i);
+    handleRefs.current[i].offset = e.pageX - handleRefs.current[i].offsetLeft;
   };
   const onEnd = (e) => {
-    setActiveHandle(null);
+    setCurrentHandle(null);
   };
   const touchStart = (e, i) => {
-    setActiveHandle(i);
-    setHandleOffsets(
-      Object.assign([], handleOffsets, {
-        [i]: e.pageX - handleRefs.current[i].offsetLeft,
-      })
-    );
+    setCurrentHandle(i);
+    handleRefs.current[i].offset = e.pageX - handleRefs.current[i].offsetLeft;
   };
 
   const moveEvent = (e) => {
-    if (activeHandle !== null) {
-      let handle = handleRefs.current[activeHandle];
+    if (currentHandle !== null) {
+      let handle = handleRefs.current[currentHandle];
       const handlePosition = Math.min(
         Math.max(
-          e.touches
-            ? e.touches[0].clientX
-            : e.clientX - handleOffsets[activeHandle],
+          e.touches ? e.touches[0].clientX : e.clientX - handle.offset,
           0 - handle.clientWidth / 2
         ),
         totalWidth - handle.clientWidth / 2
       );
       const elementPosition = handlePosition + handle.clientWidth / 2;
 
-      setListWidths(
-        Object.assign([], listWidths, {
-          [activeHandle]: elementPosition,
-        })
-      );
+      handle.style.left = `${handlePosition}px`;
+      listRefs.current[currentHandle].style.width = `${elementPosition}px`;
 
-      setHandlePositions(
-        Object.assign([], handlePositions, {
-          [activeHandle]: handlePosition,
-        })
-      );
-
-      handlePositions.forEach((h, index) => {
-        if (activeHandle > index && handle.offsetLeft <= h) {
-          setHandlePositions(
-            Object.assign([], handlePositions, {
-              [index]: handlePosition + 2,
-            })
-          );
-
-          setListWidths(
-            Object.assign([], listWidths, {
-              [index]: handlePosition + 15,
-            })
-          );
+      handleRefs.current.forEach((h, index) => {
+        if (currentHandle > index && handle.offsetLeft <= h.offsetLeft) {
+          h.style.left = `${handlePosition}px`;
+          listRefs.current[index].style.width = `${handlePosition + 15}px`;
         }
 
-        if (activeHandle < index && handle.offsetLeft >= h) {
-          setHandlePositions(
-            Object.assign([], handlePositions, {
-              [index]: handlePosition + 2,
-            })
-          );
-          setListWidths(
-            Object.assign([], listWidths, {
-              [index]: handlePosition + 15,
-            })
-          );
+        if (currentHandle < index && handle.offsetLeft >= h.offsetLeft) {
+          h.style.left = `${handlePosition}px`;
+          listRefs.current[index].style.width = `${handlePosition + 15}px`;
         }
       });
 
-      updateDesc(handlePositions);
+      updateDesc(handleRefs);
     }
   };
 
@@ -127,24 +82,20 @@ export function Handles({
     return 50 + handleHeightFirstToLast / 2 - i * handleDistance;
   };
 
-  useEffect(() => {
-    setHandlePositions(initialDimensions);
-  }, [totalWidth, totalHeight]);
-
   return (
-    <div className="handles">
+    <div className="handles" ref={handleRef}>
       {Array(totalImages - 1)
         .fill(0)
         .map((_, i) => (
           <div
             key={i}
             ref={(ref) => (handleRefs.current[i] = ref)}
-            onPointerDown={(e) => onPointerDown(e, i)}
+            onMouseDown={(e) => onMouseDown(e, i)}
             onTouchStart={(e) => touchStart(e, i)}
             className="handle"
             style={{
               zIndex: totalImages - 2 * i + zIndex,
-              left: `${handlePositions[i]}px`,
+              left: `${(totalWidth / totalImages) * (i + 1) - 30 / 2}px`,
               top: `${handlePosition(i)}%`,
             }}
           ></div>
@@ -158,7 +109,5 @@ Handles.propTypes = {
   totalHeight: PropTypes.number.isRequired,
   totalImages: PropTypes.number.isRequired,
   zIndex: PropTypes.number.isRequired,
-  listWidths: PropTypes.array.isRequired,
-  setListWidths: PropTypes.func.isRequired,
   updateDesc: PropTypes.func,
 };
