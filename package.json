@@ -1,6 +1,6 @@
 {
   "name": "@airshaper/react-multi-image-comparison",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "files": [
     "dist"
   ],
@@ -9,7 +9,7 @@
   "exports": {
     ".": {
       "import": "./dist/react-multi-image-comparison.es.js",
-      "require": "./dist/react-multi-image-comparison.umd.js",
+      "require": "./dist/react-multi-image-comparison.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
   },
