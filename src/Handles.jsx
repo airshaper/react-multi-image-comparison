@@ -115,13 +115,13 @@ export function Handles({
   };
 
   const handlePosition = (i) => {
-    handleHeight = (30 / totalHeight) * 100;
+    const handleHeight = (30 / totalHeight) * 100;
 
-    handleClearanceFactor = 0.5;
-    heightClearance = handleClearanceFactor * handleHeight;
-    handleDistance = handleHeight + heightClearance;
+    const handleClearanceFactor = 0.5;
+    const heightClearance = handleClearanceFactor * handleHeight;
+    const handleDistance = handleHeight + heightClearance;
 
-    handleHeightFirstToLast = (totalImages - 1) * handleDistance;
+    const handleHeightFirstToLast = (totalImages - 1) * handleDistance;
 
     return 50 + handleHeightFirstToLast / 2 - i * handleDistance;
   };
