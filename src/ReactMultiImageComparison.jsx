@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Handles } from "./Handles";
+import "./style.scss";
 
 export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
   const textRefs = useRef([]);
