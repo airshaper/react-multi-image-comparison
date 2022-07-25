@@ -3,7 +3,11 @@ import PropTypes from "prop-types";
 import { Handles } from "./Handles";
 import "./style.scss";
 
-export function ReactMultiImageComparison({ imagePaths, imageDescs, zIndex }) {
+export default function ReactMultiImageComparison({
+  imagePaths,
+  imageDescs,
+  zIndex,
+}) {
   const textRefs = useRef([]);
   const listRef = useRef(null);
   const [descLeft, setDescLeft] = useState(Array(imagePaths.length).fill(0));
