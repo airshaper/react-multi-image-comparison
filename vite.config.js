@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
     lib: {
+      format: ["es"],
       entry: path.resolve(__dirname, "src/ReactMultiImageComparison.jsx"),
       name: "ReactMultiImageComparison",
       fileName: (format) => `react-multi-image-comparison.${format}.js`,
