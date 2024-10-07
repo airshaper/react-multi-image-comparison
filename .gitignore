@@ -6,3 +6,4 @@
 /src/node_modules
 *.jpg
 /dev
+/dist

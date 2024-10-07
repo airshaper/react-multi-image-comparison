@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
+import { useEffect, useRef, useState } from "react"
+import PropTypes from "prop-types"
 
 export function Handles({
   totalWidth,
@@ -13,52 +13,52 @@ export function Handles({
   const initialDimensions = Array.from(
     { length: totalImages - 1 },
     (_, i) => (totalWidth / totalImages) * (i + 1) - 30 / 2
-  );
+  )
 
-  const handleRefs = useRef([]);
-  const [activeHandle, setActiveHandle] = useState(null);
-  const [handlePositions, setHandlePositions] = useState(initialDimensions);
+  const handleRefs = useRef([])
+  const [activeHandle, setActiveHandle] = useState(null)
+  const [handlePositions, setHandlePositions] = useState(initialDimensions)
   const [handleOffsets, setHandleOffsets] = useState(
     Array(totalImages - 1).fill(0)
-  );
+  )
 
   useEffect(() => {
-    document.addEventListener("pointermove", moveEvent);
-    document.addEventListener("pointerup", onEnd);
-    document.addEventListener("touchend", onEnd);
-    document.addEventListener("touchmove", moveEvent);
+    document.addEventListener("pointermove", moveEvent)
+    document.addEventListener("pointerup", onEnd)
+    document.addEventListener("touchend", onEnd)
+    document.addEventListener("touchmove", moveEvent)
 
     return () => {
-      document.removeEventListener("pointermove", moveEvent);
-      document.removeEventListener("pointerup", onEnd);
-      document.removeEventListener("touchend", onEnd);
-      document.removeEventListener("touchmove", moveEvent);
-    };
-  });
+      document.removeEventListener("pointermove", moveEvent)
+      document.removeEventListener("pointerup", onEnd)
+      document.removeEventListener("touchend", onEnd)
+      document.removeEventListener("touchmove", moveEvent)
+    }
+  })
 
   const onPointerDown = (e, i) => {
-    setActiveHandle(i);
+    setActiveHandle(i)
     setHandleOffsets(
       Object.assign([], handleOffsets, {
         [i]: e.pageX - handleRefs.current[i].offsetLeft,
       })
-    );
-  };
+    )
+  }
   const onEnd = (e) => {
-    setActiveHandle(null);
-  };
+    setActiveHandle(null)
+  }
   const touchStart = (e, i) => {
-    setActiveHandle(i);
+    setActiveHandle(i)
     setHandleOffsets(
       Object.assign([], handleOffsets, {
         [i]: e.pageX - handleRefs.current[i].offsetLeft,
       })
-    );
-  };
+    )
+  }
 
   const moveEvent = (e) => {
     if (activeHandle !== null) {
-      let handle = handleRefs.current[activeHandle];
+      let handle = handleRefs.current[activeHandle]
       const handlePosition = Math.min(
         Math.max(
           e.touches
@@ -67,19 +67,19 @@ export function Handles({
           0 - handle.clientWidth / 2
         ),
         totalWidth - handle.clientWidth / 2
-      );
+      )
 
       setListWidths(
         Object.assign([], listWidths, {
           [activeHandle]: handlePosition + handle.clientWidth / 2,
         })
-      );
+      )
 
       setHandlePositions(
         Object.assign([], handlePositions, {
           [activeHandle]: handlePosition,
         })
-      );
+      )
 
       handlePositions.forEach((h, index) => {
         if (activeHandle > index && handle.offsetLeft <= h) {
@@ -87,13 +87,13 @@ export function Handles({
             Object.assign([], handlePositions, {
               [index]: handlePosition - 3,
             })
-          );
+          )
 
           setListWidths(
             Object.assign([], listWidths, {
               [index]: handlePosition + 15,
             })
-          );
+          )
         }
 
         if (activeHandle < index && handle.offsetLeft >= h) {
@@ -101,34 +101,34 @@ export function Handles({
             Object.assign([], handlePositions, {
               [index]: handlePosition + 3,
             })
-          );
+          )
           setListWidths(
             Object.assign([], listWidths, {
               [index]: handlePosition + 15,
             })
-          );
+          )
         }
-      });
+      })
 
-      updateDesc(handlePositions);
+      updateDesc(handlePositions)
     }
-  };
+  }
 
   const handlePosition = (i) => {
-    const handleHeight = (30 / totalHeight) * 100;
+    const handleHeight = (30 / totalHeight) * 100
 
-    const handleClearanceFactor = 0.5;
-    const heightClearance = handleClearanceFactor * handleHeight;
-    const handleDistance = handleHeight + heightClearance;
+    const handleClearanceFactor = 0.5
+    const heightClearance = handleClearanceFactor * handleHeight
+    const handleDistance = handleHeight + heightClearance
 
-    const handleHeightFirstToLast = (totalImages - 1) * handleDistance;
+    const handleHeightFirstToLast = (totalImages - 1) * handleDistance
 
-    return 50 + handleHeightFirstToLast / 2 - i * handleDistance;
-  };
+    return 50 + handleHeightFirstToLast / 2 - i * handleDistance
+  }
 
   useEffect(() => {
-    setHandlePositions(initialDimensions);
-  }, [totalWidth, totalHeight]);
+    setHandlePositions(initialDimensions)
+  }, [totalWidth, totalHeight])
 
   return (
     <div className="handles">
@@ -149,7 +149,7 @@ export function Handles({
           ></div>
         ))}
     </div>
-  );
+  )
 }
 
 Handles.propTypes = {
@@ -160,4 +160,4 @@ Handles.propTypes = {
   listWidths: PropTypes.array.isRequired,
   setListWidths: PropTypes.func.isRequired,
   updateDesc: PropTypes.func,
-};
+}
